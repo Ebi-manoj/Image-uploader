@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-export const userZodSchema = z.object({
+export const registerSchema = z.object({
   email: z.email('Invalid email format'),
 
   phone: z.string().regex(/^[6-9]\d{9}$/, 'Phone number must be 10 digits'),
