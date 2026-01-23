@@ -9,6 +9,11 @@ export interface LoginUserReqDTO {
   password: string;
 }
 
+export interface VerifyOTPReqDTO {
+  email: string;
+  otp: string;
+}
+
 export interface UserDTO {
   email: string;
   phone: string;
