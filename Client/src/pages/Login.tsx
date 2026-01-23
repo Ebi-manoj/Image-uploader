@@ -1,9 +1,11 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Loader2 } from 'lucide-react';
 import { cn } from '../lib/utils';
 import { loginSchema, type LoginFormData } from '../validations/loginValidator';
+import { loginApi } from '../api/auth';
+import { handleApiError } from '../utils/handleApiError';
 
 export default function Login() {
   const {
@@ -13,10 +15,17 @@ export default function Login() {
   } = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
   });
+  const navigate = useNavigate();
 
   const onSubmit = async (data: LoginFormData) => {
     console.log(data);
-    await new Promise(res => setTimeout(res, 1500));
+    try {
+      const res = await loginApi(data);
+      navigate('/');
+      console.log(res);
+    } catch (error) {
+      handleApiError(error);
+    }
   };
 
   return (
