@@ -4,9 +4,20 @@ import { verifyOtpSchema } from '../utils/validations/verifyOtpValidator.js';
 import { authService } from '../config/container.js';
 import { HttpStatus } from '../constants/HttpStatus.js';
 import { SuccessMessage } from '../constants/messages.js';
-import { OtpPurpose } from '../constants/otp.js';
+import { loginSchema } from '../utils/validations/loginValidator.js';
 
 export class AuthController {
+  async loginUser(req: Request, res: Response) {
+    const parsed = loginSchema.parse(req.body);
+
+    const response = await authService.loginUser(parsed);
+    return res.status(HttpStatus.OK).json({
+      success: true,
+      message: SuccessMessage.LOGIN_SUCCESS,
+      data: response,
+    });
+  }
+
   async registerUser(req: Request, res: Response) {
     const parsed = registerSchema.parse(req.body);
     await authService.registerUser(parsed);

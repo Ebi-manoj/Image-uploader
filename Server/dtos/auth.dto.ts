@@ -14,7 +14,9 @@ export interface VerifyOTPReqDTO {
   otp: string;
 }
 
-export interface UserDTO {
+export interface LoginResDTO {
   email: string;
   phone: string;
+  accessToken: string;
+  refreshToken: string;
 }

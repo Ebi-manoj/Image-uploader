@@ -1,5 +1,6 @@
 export const SuccessMessage = {
   USER_CREATED: 'User created Successfully',
+  LOGIN_SUCCESS: 'Login Successfully',
   LOGOUT_SUCCESS: 'Logout Success',
   OTP_SENT: 'OTP sent to your email.',
   OTP_VERIFIED: 'OTP verified successfully.',
@@ -7,6 +8,7 @@ export const SuccessMessage = {
 
 export const ErrorMessage = {
   ENV_VAR_MISSNG: 'Missing Environment variables',
+  INVALID_CRENDTIALS: 'Invalid Credintials',
   USER_ALREADY_EXISTS: 'User with this email already exists',
   OTP_SEND_FAILED: 'Failed to send OTP. Please try again.',
   USER_NOT_FOUND: 'User not found',

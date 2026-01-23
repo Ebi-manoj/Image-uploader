@@ -1,4 +1,9 @@
-import type { RegisterUserReqDTO, VerifyOTPReqDTO } from '../dtos/auth.dto.js';
+import type {
+  LoginResDTO,
+  LoginUserReqDTO,
+  RegisterUserReqDTO,
+  VerifyOTPReqDTO,
+} from '../dtos/auth.dto.js';
 import type { IPasswordHasher } from '../interfaces/IPasswordHasher.js';
 import type { IOtpService } from '../interfaces/IOtpService.js';
 import { UserModel } from '../model/User.model.js';
@@ -6,12 +11,46 @@ import { OtpPurpose, OTP_EXPIRY_MINUTES } from '../constants/otp.js';
 import { CustomError } from '../utils/CustomError.js';
 import { ErrorMessage } from '../constants/messages.js';
 import { HttpStatus } from '../constants/HttpStatus.js';
+import type { ITokenGenerator } from '../interfaces/ITokenGenerator.js';
 
 export class AuthService {
   constructor(
     private readonly passwordHasher: IPasswordHasher,
     private readonly otpService: IOtpService,
+    private readonly tokenGenerator: ITokenGenerator,
   ) {}
+
+  async loginUser(data: LoginUserReqDTO): Promise<LoginResDTO> {
+    const user = await UserModel.findOne({
+      email: data.email,
+      isVerified: true,
+    });
+    if (!user)
+      throw new CustomError(
+        HttpStatus.BAD_REQUEST,
+        ErrorMessage.INVALID_CRENDTIALS,
+      );
+
+    const isPasswordMatch = this.passwordHasher.compare(
+      data.password,
+      user.password,
+    );
+    if (!isPasswordMatch)
+      throw new CustomError(
+        HttpStatus.BAD_REQUEST,
+        ErrorMessage.INVALID_CRENDTIALS,
+      );
+    const { accessToken, refreshToken } = this.tokenGenerator.generate({
+      id: user.id,
+    });
+
+    return {
+      email: user.email,
+      phone: user.phone,
+      accessToken,
+      refreshToken,
+    };
+  }
 
   async registerUser(data: RegisterUserReqDTO): Promise<void> {
     const existingUser = await UserModel.findOne({
@@ -53,7 +92,7 @@ export class AuthService {
       throw new CustomError(HttpStatus.NOT_FOUND, ErrorMessage.USER_NOT_FOUND);
     }
 
-    if (!user.otp || !user.otpExpiry) {
+    if (!user?.otp || !user?.otpExpiry) {
       throw new CustomError(HttpStatus.BAD_REQUEST, ErrorMessage.OTP_NOT_FOUND);
     }
 
@@ -69,8 +108,10 @@ export class AuthService {
       { email: data.email },
       {
         isVerified: true,
-        otp: undefined,
-        otpExpiry: undefined,
+        $unset: {
+          otp: '',
+          otpExpiry: '',
+        },
       },
     );
   }
