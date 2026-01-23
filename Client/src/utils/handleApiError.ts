@@ -12,7 +12,7 @@ export function handleApiError(error: unknown, description?: boolean) {
     });
     console.log('isAxios');
   } else {
-    toast.error('Unable to connect to the server. Please try again.', {
+    toast.error(ErrorMessage.SERVER_ERROR, {
       description: 'Please contact support for more',
     });
     console.log('not axios');

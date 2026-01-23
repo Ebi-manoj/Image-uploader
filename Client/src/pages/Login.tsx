@@ -4,8 +4,9 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Loader2 } from 'lucide-react';
 import { cn } from '../lib/utils';
 import { loginSchema, type LoginFormData } from '../validations/loginValidator';
-import { loginApi } from '../api/auth';
-import { handleApiError } from '../utils/handleApiError';
+import { useAppDispatch } from '../hooks/useAppDispatch';
+import { loginThunk } from '../store/features/auth/auth.thunk';
+import { toast } from 'sonner';
 
 export default function Login() {
   const {
@@ -16,15 +17,15 @@ export default function Login() {
     resolver: zodResolver(loginSchema),
   });
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
   const onSubmit = async (data: LoginFormData) => {
     console.log(data);
     try {
-      const res = await loginApi(data);
+      await dispatch(loginThunk(data)).unwrap();
       navigate('/');
-      console.log(res);
     } catch (error) {
-      handleApiError(error);
+      toast.error(typeof error == 'string' && error);
     }
   };
 
