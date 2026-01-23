@@ -11,4 +11,9 @@ function getEnvVariabes(key: string, defaultVal?: string): string {
 
 export const Env = {
   MONGO_URI: getEnvVariabes('MONGO_URI'),
+  REFRESH_TOKEN_EXPIRY: getEnvVariabes('REFRESH_TOKEN_EXPIRY'),
+  ACCESS_TOKEN_EXPIRY: getEnvVariabes('ACCESS_TOKEN_EXPIRY'),
+  JWT_SECRET_KEY: getEnvVariabes('JWT_SECRET_KEY'),
+  EMAIL_USER: getEnvVariabes('EMAIL_USER'),
+  GOOGLE_APP_PASS: getEnvVariabes('GOOGLE_APP_PASS'),
 };

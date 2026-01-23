@@ -10,7 +10,7 @@ export class AuthController {
     await authService.registerUser(parsed);
     res.status(HttpStatus.CREATED).json({
       success: true,
-      message: SuccessMessage.USER_CREATED,
+      message: SuccessMessage.OTP_SENT,
     });
   }
 }
