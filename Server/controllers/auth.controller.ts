@@ -5,16 +5,23 @@ import { authService } from '../config/container.js';
 import { HttpStatus } from '../constants/HttpStatus.js';
 import { SuccessMessage } from '../constants/messages.js';
 import { loginSchema } from '../utils/validations/loginValidator.js';
+import { REFRESH_TOKEN } from '../constants/constant.js';
 
 export class AuthController {
   async loginUser(req: Request, res: Response) {
     const parsed = loginSchema.parse(req.body);
 
-    const response = await authService.loginUser(parsed);
+    const result = await authService.loginUser(parsed);
+    const { refreshToken, ...dto } = result;
+    res.cookie(REFRESH_TOKEN, refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV == 'production',
+      sameSite: process.env.NODE_ENV == 'production' ? 'none' : 'lax',
+    });
     return res.status(HttpStatus.OK).json({
       success: true,
       message: SuccessMessage.LOGIN_SUCCESS,
-      data: response,
+      data: dto,
     });
   }
 
