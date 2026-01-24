@@ -30,3 +30,14 @@ export const verifyOtpApi = async (data: VerifyOTPReqDTO) => {
   );
   return res.data;
 };
+
+export const resendOtpApi = async (
+  email: string,
+  purpose: 'REGISTRATION' | 'FORGOT_PASSWORD',
+) => {
+  const res = await axiosInstance.post<ApiResponse<RegisterUserResDTO>>(
+    '/auth/resend-otp',
+    { email, purpose },
+  );
+  return res.data.data;
+};

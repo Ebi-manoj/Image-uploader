@@ -18,6 +18,11 @@ export interface VerifyOTPReqDTO {
   otp: string;
 }
 
+export interface ResendOTPReqDTO {
+  email: string;
+  purpose: 'REGISTRATION' | 'FORGOT_PASSWORD';
+}
+
 export interface LoginResDTO {
   email: string;
   phone: string;

@@ -3,7 +3,7 @@ export enum OtpPurpose {
   FORGOT_PASSWORD = 'FORGOT_PASSWORD',
 }
 
-export const OTP_EXPIRY_MINUTES = 5;
+export const OTP_EXPIRY_MINUTES = 3;
 export const OTP_LENGTH = 6;
 
 export const OTP_EMAIL_TEMPLATES = {

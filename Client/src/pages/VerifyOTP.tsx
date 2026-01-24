@@ -12,15 +12,16 @@ import {
 import { otpSchema, type OTPFormData } from '../validations/otpValidation';
 import { useNavigate } from 'react-router-dom';
 import { getOTPDetails } from '../utils/otp';
-import { verifyOtpApi } from '../api/auth';
+import { verifyOtpApi, resendOtpApi } from '../api/auth';
 import { handleApiError } from '../utils/handleApiError';
+import { setOTPDetails } from '../utils/otp';
 
 export default function VerifyOTP() {
   const navigate = useNavigate();
   const [timeLeft, setTimeLeft] = useState(0);
   const [isResending, setIsResending] = useState(false);
   const [email, setEmail] = useState('');
-  const [purpose, setPurpose] = useState<'signup' | 'reset_password' | ''>('');
+  const [purpose, setPurpose] = useState<'REGISTRATION' | 'FORGOT_PASSWORD' | ''>('');
 
   useEffect(() => {
     const otpDetails = getOTPDetails();
@@ -63,7 +64,7 @@ export default function VerifyOTP() {
   const onSubmit = async (data: OTPFormData) => {
     try {
       await verifyOtpApi({ email, otp: data.otp });
-      if (purpose === 'signup') {
+      if (purpose === 'REGISTRATION') {
         toast.success('Signup successful! Please login.');
         navigate('/login', { replace: true });
       } else {
@@ -76,10 +77,25 @@ export default function VerifyOTP() {
 
   const resendOTP = async () => {
     setIsResending(true);
-
-    setTimeLeft(0);
-    setIsResending(false);
-    toast.success('OTP Resent Successfully!');
+    try {
+      if (!purpose) {
+        toast.error('Invalid OTP purpose');
+        return;
+      }
+      const result = await resendOtpApi(email, purpose);
+      setOTPDetails({ ...result, purpose });
+      
+      const expiryTime = new Date(result.otpExpiry).getTime();
+      const now = Date.now();
+      const timeLeftMs = expiryTime - now;
+      setTimeLeft(Math.floor(timeLeftMs / 1000));
+      
+      toast.success('OTP Resent Successfully!');
+    } catch (error) {
+      handleApiError(error);
+    } finally {
+      setIsResending(false);
+    }
   };
 
   const minutes = Math.floor(timeLeft / 60);

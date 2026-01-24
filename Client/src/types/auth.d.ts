@@ -28,5 +28,5 @@ export interface LoginResDTO {
 export interface OTPDetails {
   email: string;
   otpExpiry: Date;
-  purpose: 'signup' | 'reset_password';
+  purpose: 'REGISTRATION' | 'FORGOT_PASSWORD';
 }

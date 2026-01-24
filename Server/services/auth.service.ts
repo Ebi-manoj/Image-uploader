@@ -120,4 +120,44 @@ export class AuthService {
       },
     );
   }
+
+  async resendOTP(
+    email: string,
+    purpose: OtpPurpose,
+  ): Promise<RegisterUserResDTO> {
+    const user = await UserModel.findOne({ email });
+
+    if (!user) {
+      throw new CustomError(HttpStatus.NOT_FOUND, ErrorMessage.USER_NOT_FOUND);
+    }
+
+    if (purpose === OtpPurpose.REGISTRATION && user.isVerified) {
+      throw new CustomError(
+        HttpStatus.BAD_REQUEST,
+        ErrorMessage.USER_ALREADY_EXISTS,
+      );
+    }
+
+    if (purpose === OtpPurpose.FORGOT_PASSWORD && !user.isVerified) {
+      throw new CustomError(
+        HttpStatus.BAD_REQUEST,
+        ErrorMessage.USER_NOT_VERIFIED,
+      );
+    }
+
+    const otp = await this.otpService.sendOtp(email, purpose);
+    const otpExpiry = new Date();
+    otpExpiry.setMinutes(otpExpiry.getMinutes() + OTP_EXPIRY_MINUTES);
+    await UserModel.findOneAndUpdate(
+      { email },
+      {
+        otp,
+        otpExpiry,
+      },
+    );
+    return {
+      email,
+      otpExpiry,
+    };
+  }
 }

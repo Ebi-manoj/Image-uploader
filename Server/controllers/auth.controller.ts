@@ -5,7 +5,9 @@ import { authService } from '../config/container.js';
 import { HttpStatus } from '../constants/HttpStatus.js';
 import { SuccessMessage } from '../constants/messages.js';
 import { loginSchema } from '../utils/validations/loginValidator.js';
+import { resendOtpSchema } from '../utils/validations/resendOtpValidator.js';
 import { REFRESH_TOKEN } from '../constants/constant.js';
+import type { OtpPurpose } from '../constants/otp.js';
 
 export class AuthController {
   async loginUser(req: Request, res: Response) {
@@ -41,6 +43,19 @@ export class AuthController {
     res.status(HttpStatus.OK).json({
       success: true,
       message: SuccessMessage.OTP_VERIFIED,
+    });
+  }
+
+  async resendOtp(req: Request, res: Response) {
+    const parsed = resendOtpSchema.parse(req.body);
+    const dto = await authService.resendOTP(
+      parsed.email,
+      parsed.purpose as OtpPurpose,
+    );
+    res.status(HttpStatus.OK).json({
+      success: true,
+      message: SuccessMessage.OTP_SENT,
+      data: dto,
     });
   }
 }

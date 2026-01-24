@@ -23,7 +23,7 @@ export default function Signup() {
   const onSubmit = async (data: SignupFormData) => {
     try {
       const res = await signupApi(data);
-      setOTPDetails({ ...res, purpose: 'signup' });
+      setOTPDetails({ ...res, purpose: 'REGISTRATION' });
       navigate('/verify-otp', { replace: true });
     } catch (error) {}
   };
