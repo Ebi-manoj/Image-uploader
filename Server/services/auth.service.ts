@@ -160,4 +160,32 @@ export class AuthService {
       otpExpiry,
     };
   }
+
+  async forgotPassword(email: string): Promise<RegisterUserResDTO> {
+    const user = await UserModel.findOne({ email, isVerified: true });
+
+    if (!user) {
+      throw new CustomError(
+        HttpStatus.NOT_FOUND,
+        ErrorMessage.USER_NOT_FOUND,
+      );
+    }
+
+    const otp = await this.otpService.sendOtp(email, OtpPurpose.FORGOT_PASSWORD);
+    const otpExpiry = new Date();
+    otpExpiry.setMinutes(otpExpiry.getMinutes() + OTP_EXPIRY_MINUTES);
+
+    await UserModel.findOneAndUpdate(
+      { email },
+      {
+        otp,
+        otpExpiry,
+      },
+    );
+
+    return {
+      email,
+      otpExpiry,
+    };
+  }
 }

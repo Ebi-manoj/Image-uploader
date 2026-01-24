@@ -6,6 +6,7 @@ import { HttpStatus } from '../constants/HttpStatus.js';
 import { SuccessMessage } from '../constants/messages.js';
 import { loginSchema } from '../utils/validations/loginValidator.js';
 import { resendOtpSchema } from '../utils/validations/resendOtpValidator.js';
+import { forgotPasswordSchema } from '../utils/validations/forgotPasswordValidator.js';
 import { REFRESH_TOKEN } from '../constants/constant.js';
 import type { OtpPurpose } from '../constants/otp.js';
 
@@ -52,6 +53,16 @@ export class AuthController {
       parsed.email,
       parsed.purpose as OtpPurpose,
     );
+    res.status(HttpStatus.OK).json({
+      success: true,
+      message: SuccessMessage.OTP_SENT,
+      data: dto,
+    });
+  }
+
+  async forgotPassword(req: Request, res: Response) {
+    const parsed = forgotPasswordSchema.parse(req.body);
+    const dto = await authService.forgotPassword(parsed.email);
     res.status(HttpStatus.OK).json({
       success: true,
       message: SuccessMessage.OTP_SENT,

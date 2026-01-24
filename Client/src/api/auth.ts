@@ -41,3 +41,11 @@ export const resendOtpApi = async (
   );
   return res.data.data;
 };
+
+export const forgotPasswordApi = async (email: string) => {
+  const res = await axiosInstance.post<ApiResponse<RegisterUserResDTO>>(
+    '/auth/forgot-password',
+    { email },
+  );
+  return res.data.data;
+};

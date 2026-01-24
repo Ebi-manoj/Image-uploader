@@ -23,6 +23,10 @@ export interface ResendOTPReqDTO {
   purpose: 'REGISTRATION' | 'FORGOT_PASSWORD';
 }
 
+export interface ForgotPasswordReqDTO {
+  email: string;
+}
+
 export interface LoginResDTO {
   email: string;
   phone: string;

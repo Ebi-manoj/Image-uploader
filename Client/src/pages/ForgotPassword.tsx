@@ -3,42 +3,46 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Link, useNavigate } from 'react-router-dom';
 import { Loader2 } from 'lucide-react';
 import { cn } from '../lib/utils';
-import { loginSchema, type LoginFormData } from '../validations/loginValidator';
-import { useAppDispatch } from '../hooks/useAppDispatch';
-import { loginThunk } from '../store/features/auth/auth.thunk';
+import {
+  forgotPasswordSchema,
+  type ForgotPasswordFormData,
+} from '../validations/forgotPasswordValidation';
+import { forgotPasswordApi } from '../api/auth';
+import { setOTPDetails } from '../utils/otp';
+import { handleApiError } from '../utils/handleApiError';
 import { toast } from 'sonner';
 
-export default function Login() {
+export default function ForgotPassword() {
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm<LoginFormData>({
-    resolver: zodResolver(loginSchema),
+  } = useForm<ForgotPasswordFormData>({
+    resolver: zodResolver(forgotPasswordSchema),
   });
   const navigate = useNavigate();
-  const dispatch = useAppDispatch();
 
-  const onSubmit = async (data: LoginFormData) => {
-    console.log(data);
+  const onSubmit = async (data: ForgotPasswordFormData) => {
     try {
-      await dispatch(loginThunk(data)).unwrap();
-      navigate('/', { replace: true });
+      const res = await forgotPasswordApi(data.email);
+      setOTPDetails({ ...res, purpose: 'FORGOT_PASSWORD' });
+      toast.success('OTP sent to your email!');
+      navigate('/verify-otp', { replace: true });
     } catch (error) {
-      toast.error(typeof error == 'string' && error);
+      handleApiError(error);
     }
   };
 
   return (
-    <div className="flex min-h-[calc(100vh-120px)] items-center justify-center bg-white">
+    <div className="flex min-h-[calc(100vh-120px)] items-center justify-center bg-white px-4">
       <div className="w-full max-w-md rounded-2xl bg-white/95 p-8 shadow-xl backdrop-blur">
-        {/* Logo / Title */}
+        {/* Header */}
         <div className="mb-8 text-center">
           <h1 className="text-4xl p-1 font-bold tracking-tight bg-linear-to-r from-pink-500 via-purple-500 to-orange-400 bg-clip-text text-transparent">
             Image Uploader
           </h1>
-          <p className="mt-2 text-shadow-md text-slate-600">
-            Sign in to continue
+          <p className="mt-2 text-sm text-slate-600">
+            Reset your password
           </p>
         </div>
 
@@ -48,7 +52,7 @@ export default function Login() {
           <div>
             <input
               type="email"
-              placeholder="Email"
+              placeholder="Email address"
               autoComplete="email"
               className={cn(
                 'w-full rounded-lg px-3 py-2.5 text-sm',
@@ -65,34 +69,6 @@ export default function Login() {
             )}
           </div>
 
-          {/* Password */}
-          <div>
-            <input
-              type="password"
-              placeholder="Password"
-              autoComplete="current-password"
-              className={cn(
-                'w-full rounded-lg px-3 py-2.5 text-sm',
-                'bg-slate-50 ring-1 ring-slate-200',
-                'focus:ring-2 focus:ring-pink-500 focus:outline-none',
-                errors.password && 'ring-red-500 focus:ring-red-500',
-              )}
-              {...register('password')}
-            />
-            {errors.password && (
-              <p className="mt-1 text-xs text-red-500">
-                {errors.password.message}
-              </p>
-            )}
-          </div>
-
-          {/* Forgot password */}
-          <div className="text-right text-sm">
-            <Link to="/forgot-password" className="font-medium text-pink-600 hover:underline">
-              Forgot password?
-            </Link>
-          </div>
-
           {/* Submit */}
           <button
             type="submit"
@@ -100,18 +76,18 @@ export default function Login() {
             className="cursor-pointer flex w-full items-center justify-center gap-2 rounded-lg bg-linear-to-r from-pink-500 via-purple-500 to-orange-400 px-4 py-2.5 text-sm font-semibold text-white transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-70"
           >
             {isSubmitting && <Loader2 className="h-4 w-4 animate-spin" />}
-            {isSubmitting ? 'Signing in...' : 'Sign in'}
+            {isSubmitting ? 'Sending OTP...' : 'Send OTP'}
           </button>
         </form>
 
         {/* Footer */}
         <p className="mt-6 text-center text-sm text-slate-600">
-          Don’t have an account?{' '}
+          Remember your password?{' '}
           <Link
-            to="/signup"
+            to="/login"
             className="font-semibold text-pink-600 hover:underline"
           >
-            Sign up
+            Sign in
           </Link>
         </p>
       </div>
