@@ -3,6 +3,10 @@ export interface RegisterUserReqDTO {
   phone: string;
   password: string;
 }
+export interface RegisterUserResDTO {
+  email: string;
+  otpExpiry: Date;
+}
 
 export interface LoginUserReqDTO {
   email: string;

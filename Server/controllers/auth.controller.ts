@@ -27,10 +27,11 @@ export class AuthController {
 
   async registerUser(req: Request, res: Response) {
     const parsed = registerSchema.parse(req.body);
-    await authService.registerUser(parsed);
+    const dto = await authService.registerUser(parsed);
     res.status(HttpStatus.CREATED).json({
       success: true,
       message: SuccessMessage.OTP_SENT,
+      data: dto,
     });
   }
 

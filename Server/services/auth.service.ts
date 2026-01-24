@@ -2,6 +2,7 @@ import type {
   LoginResDTO,
   LoginUserReqDTO,
   RegisterUserReqDTO,
+  RegisterUserResDTO,
   VerifyOTPReqDTO,
 } from '../dtos/auth.dto.js';
 import type { IPasswordHasher } from '../interfaces/IPasswordHasher.js';
@@ -52,7 +53,7 @@ export class AuthService {
     };
   }
 
-  async registerUser(data: RegisterUserReqDTO): Promise<void> {
+  async registerUser(data: RegisterUserReqDTO): Promise<RegisterUserResDTO> {
     const existingUser = await UserModel.findOne({
       email: data.email,
       isVerified: true,
@@ -84,6 +85,10 @@ export class AuthService {
       },
       { upsert: true },
     );
+    return {
+      email: data.email,
+      otpExpiry,
+    };
   }
   async verifyOTP(data: VerifyOTPReqDTO): Promise<void> {
     const user = await UserModel.findOne({ email: data.email });

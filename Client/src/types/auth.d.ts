@@ -3,6 +3,10 @@ export interface RegisterUserReqDTO {
   phone: string;
   password: string;
 }
+export interface RegisterUserResDTO {
+  email: string;
+  otpExpiry: Date;
+}
 
 export interface LoginUserReqDTO {
   email: string;
@@ -19,4 +23,10 @@ export interface LoginResDTO {
   phone: string;
   accessToken: string;
   refreshToken: string;
+}
+
+export interface OTPDetails {
+  email: string;
+  otpExpiry: Date;
+  purpose: 'signup' | 'reset_password';
 }

@@ -23,7 +23,7 @@ export default function Login() {
     console.log(data);
     try {
       await dispatch(loginThunk(data)).unwrap();
-      navigate('/');
+      navigate('/', { replace: true });
     } catch (error) {
       toast.error(typeof error == 'string' && error);
     }

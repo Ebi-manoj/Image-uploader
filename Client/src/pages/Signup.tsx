@@ -1,12 +1,14 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Loader2 } from 'lucide-react';
 import { cn } from '../lib/utils';
 import {
   signupSchema,
   type SignupFormData,
 } from '../validations/signupValidation';
+import { signupApi } from '../api/auth';
+import { setOTPDetails } from '../utils/otp';
 
 export default function Signup() {
   const {
@@ -16,10 +18,14 @@ export default function Signup() {
   } = useForm<SignupFormData>({
     resolver: zodResolver(signupSchema),
   });
+  const navigate = useNavigate();
 
   const onSubmit = async (data: SignupFormData) => {
-    console.log('Signup data:', data);
-    await new Promise(res => setTimeout(res, 1500));
+    try {
+      const res = await signupApi(data);
+      setOTPDetails({ ...res, purpose: 'signup' });
+      navigate('/verify-otp', { replace: true });
+    } catch (error) {}
   };
 
   return (
