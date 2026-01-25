@@ -9,6 +9,7 @@ import { resendOtpSchema } from '../utils/validations/resendOtpValidator.js';
 import { forgotPasswordSchema } from '../utils/validations/forgotPasswordValidator.js';
 import { REFRESH_TOKEN } from '../constants/constant.js';
 import type { OtpPurpose } from '../constants/otp.js';
+import { resetPasswordSchema } from '../utils/validations/resetPasswordValidator.js';
 
 export class AuthController {
   async loginUser(req: Request, res: Response) {
@@ -40,10 +41,11 @@ export class AuthController {
 
   async verifyOtp(req: Request, res: Response) {
     const parsed = verifyOtpSchema.parse(req.body);
-    await authService.verifyOTP(parsed);
+    const dto = await authService.verifyOTP(parsed);
     res.status(HttpStatus.OK).json({
       success: true,
       message: SuccessMessage.OTP_VERIFIED,
+      data: dto,
     });
   }
 
@@ -67,6 +69,17 @@ export class AuthController {
       success: true,
       message: SuccessMessage.OTP_SENT,
       data: dto,
+    });
+  }
+  async resetPassword(req: Request, res: Response) {
+    const parsed = resetPasswordSchema.parse(req.body);
+    await authService.resetPassword({
+      email: parsed.email,
+      newPassword: parsed.newPassword,
+    });
+    res.status(HttpStatus.OK).json({
+      success: true,
+      message: SuccessMessage.PASSWORD_RESET_SUCCESS,
     });
   }
 }

@@ -5,6 +5,7 @@ import type {
   RegisterUserReqDTO,
   RegisterUserResDTO,
   VerifyOTPReqDTO,
+  VerifyOTPResDTO,
 } from '../types/auth';
 import { axiosInstance } from '../utils/axios';
 
@@ -24,11 +25,11 @@ export const signupApi = async (data: RegisterUserReqDTO) => {
 };
 
 export const verifyOtpApi = async (data: VerifyOTPReqDTO) => {
-  const res = await axiosInstance.post<ApiResponse<null>>(
+  const res = await axiosInstance.post<ApiResponse<VerifyOTPResDTO>>(
     '/auth/verify-otp',
     data,
   );
-  return res.data;
+  return res.data.data;
 };
 
 export const resendOtpApi = async (
@@ -48,4 +49,20 @@ export const forgotPasswordApi = async (email: string) => {
     { email },
   );
   return res.data.data;
+};
+
+export const resetPasswordApi = async (
+  verificationToken: string,
+  newPassword: string,
+) => {
+  const res = await axiosInstance.post<ApiResponse<null>>(
+    '/auth/reset-password',
+    { newPassword },
+    {
+      headers: {
+        Authorization: `Bearer ${verificationToken}`,
+      },
+    },
+  );
+  return res.data;
 };

@@ -4,6 +4,7 @@ export const SuccessMessage = {
   LOGOUT_SUCCESS: 'Logout Success',
   OTP_SENT: 'OTP sent to your email.',
   OTP_VERIFIED: 'OTP verified successfully.',
+  PASSWORD_RESET_SUCCESS: 'Password reset successfully. Please login with your new password.',
 };
 
 export const ErrorMessage = {

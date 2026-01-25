@@ -21,7 +21,9 @@ export default function VerifyOTP() {
   const [timeLeft, setTimeLeft] = useState(0);
   const [isResending, setIsResending] = useState(false);
   const [email, setEmail] = useState('');
-  const [purpose, setPurpose] = useState<'REGISTRATION' | 'FORGOT_PASSWORD' | ''>('');
+  const [purpose, setPurpose] = useState<
+    'REGISTRATION' | 'FORGOT_PASSWORD' | ''
+  >('');
 
   useEffect(() => {
     const otpDetails = getOTPDetails();
@@ -63,12 +65,20 @@ export default function VerifyOTP() {
 
   const onSubmit = async (data: OTPFormData) => {
     try {
-      await verifyOtpApi({ email, otp: data.otp });
+      const result = await verifyOtpApi({ email, otp: data.otp });
       if (purpose === 'REGISTRATION') {
         toast.success('Signup successful! Please login.');
         navigate('/login', { replace: true });
-      } else {
-        toast.success('OTP Verified Successfully!');
+      } else if (purpose === 'FORGOT_PASSWORD') {
+        if (result.verificationToken) {
+          toast.success('OTP Verified!');
+          navigate('/reset-password', {
+            state: { verificationToken: result.verificationToken },
+            replace: true,
+          });
+        } else {
+          toast.error('Verification failed. Please try again.');
+        }
       }
     } catch (error) {
       handleApiError(error);
@@ -84,12 +94,12 @@ export default function VerifyOTP() {
       }
       const result = await resendOtpApi(email, purpose);
       setOTPDetails({ ...result, purpose });
-      
+
       const expiryTime = new Date(result.otpExpiry).getTime();
       const now = Date.now();
       const timeLeftMs = expiryTime - now;
       setTimeLeft(Math.floor(timeLeftMs / 1000));
-      
+
       toast.success('OTP Resent Successfully!');
     } catch (error) {
       handleApiError(error);

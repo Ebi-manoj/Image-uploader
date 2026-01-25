@@ -18,6 +18,10 @@ export interface VerifyOTPReqDTO {
   otp: string;
 }
 
+export interface VerifyOTPResDTO {
+  verificationToken?: string;
+}
+
 export interface LoginResDTO {
   email: string;
   phone: string;

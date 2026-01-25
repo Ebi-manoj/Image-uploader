@@ -27,6 +27,11 @@ export interface ForgotPasswordReqDTO {
   email: string;
 }
 
+export interface ResetPasswordReqDTO {
+  email: string;
+  newPassword: string;
+}
+
 export interface LoginResDTO {
   email: string;
   phone: string;

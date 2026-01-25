@@ -14,3 +14,5 @@ export const authService = new AuthService(
   otpService,
   tokenGenerator,
 );
+
+export { tokenGenerator };

@@ -3,6 +3,7 @@ import type {
   LoginUserReqDTO,
   RegisterUserReqDTO,
   RegisterUserResDTO,
+  ResetPasswordReqDTO,
   VerifyOTPReqDTO,
 } from '../dtos/auth.dto.js';
 import type { IPasswordHasher } from '../interfaces/IPasswordHasher.js';
@@ -32,7 +33,7 @@ export class AuthService {
         ErrorMessage.INVALID_CRENDTIALS,
       );
 
-    const isPasswordMatch = this.passwordHasher.compare(
+    const isPasswordMatch = await this.passwordHasher.compare(
       data.password,
       user.password,
     );
@@ -90,7 +91,9 @@ export class AuthService {
       otpExpiry,
     };
   }
-  async verifyOTP(data: VerifyOTPReqDTO): Promise<void> {
+  async verifyOTP(
+    data: VerifyOTPReqDTO,
+  ): Promise<{ verificationToken?: string }> {
     const user = await UserModel.findOne({ email: data.email });
 
     if (!user) {
@@ -119,6 +122,10 @@ export class AuthService {
         },
       },
     );
+    const verificationToken = this.tokenGenerator.verificationToken({
+      email: data.email,
+    });
+    return { verificationToken };
   }
 
   async resendOTP(
@@ -165,13 +172,13 @@ export class AuthService {
     const user = await UserModel.findOne({ email, isVerified: true });
 
     if (!user) {
-      throw new CustomError(
-        HttpStatus.NOT_FOUND,
-        ErrorMessage.USER_NOT_FOUND,
-      );
+      throw new CustomError(HttpStatus.NOT_FOUND, ErrorMessage.USER_NOT_FOUND);
     }
 
-    const otp = await this.otpService.sendOtp(email, OtpPurpose.FORGOT_PASSWORD);
+    const otp = await this.otpService.sendOtp(
+      email,
+      OtpPurpose.FORGOT_PASSWORD,
+    );
     const otpExpiry = new Date();
     otpExpiry.setMinutes(otpExpiry.getMinutes() + OTP_EXPIRY_MINUTES);
 
@@ -187,5 +194,22 @@ export class AuthService {
       email,
       otpExpiry,
     };
+  }
+
+  async resetPassword(data: ResetPasswordReqDTO): Promise<void> {
+    const user = await UserModel.findOne({ email: data.email });
+
+    if (!user) {
+      throw new CustomError(HttpStatus.NOT_FOUND, ErrorMessage.USER_NOT_FOUND);
+    }
+
+    const hashedPassword = await this.passwordHasher.hash(data.newPassword);
+
+    await UserModel.findOneAndUpdate(
+      { email: data.email },
+      {
+        password: hashedPassword,
+      },
+    );
   }
 }
