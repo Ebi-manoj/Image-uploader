@@ -4,12 +4,15 @@ export const SuccessMessage = {
   LOGOUT_SUCCESS: 'Logout Success',
   OTP_SENT: 'OTP sent to your email.',
   OTP_VERIFIED: 'OTP verified successfully.',
-  PASSWORD_RESET_SUCCESS: 'Password reset successfully. Please login with your new password.',
+  PASSWORD_RESET_SUCCESS:
+    'Password reset successfully. Please login with your new password.',
+  REFRESHTOKEN_SUCCESS: 'Refresh token successfully',
 };
 
 export const ErrorMessage = {
   ENV_VAR_MISSNG: 'Missing Environment variables',
   INVALID_CRENDTIALS: 'Invalid Credintials',
+  UNAUTHORIZED: 'User not authenticated',
   USER_ALREADY_EXISTS: 'User with this email already exists',
   OTP_SEND_FAILED: 'Failed to send OTP. Please try again.',
   USER_NOT_FOUND: 'User not found',

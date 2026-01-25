@@ -3,13 +3,15 @@ import { registerSchema } from '../utils/validations/registerValidator.js';
 import { verifyOtpSchema } from '../utils/validations/verifyOtpValidator.js';
 import { authService } from '../config/container.js';
 import { HttpStatus } from '../constants/HttpStatus.js';
-import { SuccessMessage } from '../constants/messages.js';
+import { ErrorMessage, SuccessMessage } from '../constants/messages.js';
 import { loginSchema } from '../utils/validations/loginValidator.js';
 import { resendOtpSchema } from '../utils/validations/resendOtpValidator.js';
 import { forgotPasswordSchema } from '../utils/validations/forgotPasswordValidator.js';
 import { REFRESH_TOKEN } from '../constants/constant.js';
 import type { OtpPurpose } from '../constants/otp.js';
 import { resetPasswordSchema } from '../utils/validations/resetPasswordValidator.js';
+import { CustomError } from '../utils/CustomError.js';
+import { success } from 'zod';
 
 export class AuthController {
   async loginUser(req: Request, res: Response) {
@@ -80,6 +82,18 @@ export class AuthController {
     res.status(HttpStatus.OK).json({
       success: true,
       message: SuccessMessage.PASSWORD_RESET_SUCCESS,
+    });
+  }
+  async refreshToken(req: Request, res: Response) {
+    const refreshToken = req.cookies[REFRESH_TOKEN];
+    if (!refreshToken)
+      throw new CustomError(HttpStatus.UNAUTHORIZED, ErrorMessage.UNAUTHORIZED);
+
+    const dto = await authService.refreshToken(refreshToken);
+    res.status(HttpStatus.OK).json({
+      success: true,
+      message: SuccessMessage.REFRESHTOKEN_SUCCESS,
+      data: dto,
     });
   }
 }

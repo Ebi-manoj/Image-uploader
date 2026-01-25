@@ -9,6 +9,11 @@ router.post('/auth/register', authController.registerUser);
 router.post('/auth/verify-otp', authController.verifyOtp);
 router.post('/auth/resend-otp', authController.resendOtp);
 router.post('/auth/forgot-password', authController.forgotPassword);
-router.post('/auth/reset-password', verifyResetToken, authController.resetPassword);
+router.post(
+  '/auth/reset-password',
+  verifyResetToken,
+  authController.resetPassword,
+);
+router.get('/auth/refresh-token', authController.refreshToken);
 
 export default router;
