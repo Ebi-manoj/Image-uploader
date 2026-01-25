@@ -66,3 +66,15 @@ export const resetPasswordApi = async (
   );
   return res.data;
 };
+
+export const refreshTokenApi = async () => {
+  const res = await axiosInstance.get<ApiResponse<LoginResDTO>>(
+    '/auth/refresh-token',
+  );
+  return res.data.data;
+};
+
+export const logoutApi = async () => {
+  const res = await axiosInstance.post<ApiResponse<null>>('/auth/logout');
+  return res.data;
+};

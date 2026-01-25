@@ -213,7 +213,9 @@ export class AuthService {
     );
   }
 
-  async refreshToken(token: string): Promise<{ accessToken: string }> {
+  async refreshToken(
+    token: string,
+  ): Promise<Omit<LoginResDTO, 'refreshToken'>> {
     const decoded = this.tokenGenerator.verify(token);
     if (!decoded || !decoded.id)
       throw new CustomError(HttpStatus.UNAUTHORIZED, ErrorMessage.UNAUTHORIZED);
@@ -223,6 +225,10 @@ export class AuthService {
       throw new CustomError(HttpStatus.NOT_FOUND, ErrorMessage.USER_NOT_FOUND);
 
     const { accessToken } = this.tokenGenerator.generate({ id: user.id });
-    return { accessToken };
+    return {
+      email: user.email,
+      phone: user.phone,
+      accessToken,
+    };
   }
 }

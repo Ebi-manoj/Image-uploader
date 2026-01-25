@@ -1,6 +1,7 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 import type { AuthState } from './auth';
 import { loginThunk } from './auth.thunk';
+import type { LoginResDTO } from '../../../types/auth';
 
 const initialState: AuthState = {
   loading: false,
@@ -11,7 +12,17 @@ const initialState: AuthState = {
 export const authSlice = createSlice({
   name: 'auth',
   initialState,
-  reducers: {},
+  reducers: {
+    setUser: (state, action: PayloadAction<LoginResDTO>) => {
+      const { accessToken, ...user } = action.payload;
+      state.token = accessToken;
+      state.user = user;
+    },
+    clearUser: state => {
+      state.token = null;
+      state.user = null;
+    },
+  },
   extraReducers: builder => {
     builder
       .addCase(loginThunk.pending, state => {
@@ -30,4 +41,5 @@ export const authSlice = createSlice({
   },
 });
 
+export const { setUser, clearUser } = authSlice.actions;
 export default authSlice.reducer;

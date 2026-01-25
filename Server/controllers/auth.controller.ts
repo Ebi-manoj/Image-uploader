@@ -96,6 +96,19 @@ export class AuthController {
       data: dto,
     });
   }
+
+  async logout(req: Request, res: Response) {
+    res.clearCookie(REFRESH_TOKEN, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV == 'production',
+      sameSite: process.env.NODE_ENV == 'production' ? 'none' : 'lax',
+    });
+
+    res.status(HttpStatus.OK).json({
+      success: true,
+      message: SuccessMessage.LOGOUT_SUCCESS,
+    });
+  }
 }
 
 export const authController = new AuthController();
