@@ -21,7 +21,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         const res = await refreshTokenApi();
         dispatch(setUser(res));
       } catch (error) {
-        console.log('Error failed to restore refreshToken');
+       
       } finally {
         setLoading(false);
       }

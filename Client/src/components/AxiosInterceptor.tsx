@@ -16,7 +16,7 @@ export const AxiosInterceptor = ({
   useEffect(() => {
     const requestInterceptor = axiosInstance.interceptors.request.use(
       config => {
-        if (!token) {
+        if (token) {
           config.headers.Authorization = `Bearer ${token}`;
         }
         return config;
@@ -29,7 +29,7 @@ export const AxiosInterceptor = ({
       async error => {
         const originalRequest = error.config;
         if (
-          error.response.status === 401 &&
+          error.response?.status === 401 &&
           !originalRequest._retry &&
           !originalRequest.url?.includes('/refresh-token')
         ) {
@@ -46,6 +46,7 @@ export const AxiosInterceptor = ({
             return Promise.reject(error);
           }
         }
+        return Promise.reject(error);
       },
     );
 
@@ -53,7 +54,7 @@ export const AxiosInterceptor = ({
       axiosInstance.interceptors.request.eject(requestInterceptor);
       axiosInstance.interceptors.response.eject(responseInterceptor);
     };
-  }, []);
+  }, [dispatch]);
 
   return <>{ children }</>;
 };

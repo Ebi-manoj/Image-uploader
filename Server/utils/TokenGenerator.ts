@@ -24,7 +24,7 @@ export class JWTTokenGenerator implements ITokenGenerator {
 
   verificationToken(payload: VerificationTokenPayload): string {
     return jwt.sign(payload, Env.JWT_SECRET_KEY, {
-      expiresIn: Env.ACCESS_TOKEN_EXPIRY, 
+      expiresIn: Env.VERIFICATION_TOKEN_EXPIRY,
     } as SignOptions);
   }
 

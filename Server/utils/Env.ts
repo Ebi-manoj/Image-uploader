@@ -16,4 +16,5 @@ export const Env = {
   JWT_SECRET_KEY: getEnvVariabes('JWT_SECRET_KEY'),
   EMAIL_USER: getEnvVariabes('EMAIL_USER'),
   GOOGLE_APP_PASS: getEnvVariabes('GOOGLE_APP_PASS'),
+  VERIFICATION_TOKEN_EXPIRY: getEnvVariabes('VERIFICATION_TOKEN_EXPIRY'),
 };
