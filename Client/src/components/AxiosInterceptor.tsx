@@ -13,6 +13,7 @@ export const AxiosInterceptor = ({
 }) => {
   const { token } = useSelector((state: RootState) => state.auth);
   const dispatch = useDispatch();
+  
   useEffect(() => {
     const requestInterceptor = axiosInstance.interceptors.request.use(
       config => {
@@ -36,10 +37,10 @@ export const AxiosInterceptor = ({
           originalRequest._retry = true;
           try {
             const res = await refreshTokenApi();
-            const token = res.accessToken;
+            const newToken = res.accessToken;
             dispatch(setUser(res));
 
-            originalRequest.headers.Authorization = `Bearer ${token}`;
+            originalRequest.headers.Authorization = `Bearer ${newToken}`;
             return axiosInstance(originalRequest);
           } catch (error) {
             dispatch(clearUser());
@@ -54,7 +55,7 @@ export const AxiosInterceptor = ({
       axiosInstance.interceptors.request.eject(requestInterceptor);
       axiosInstance.interceptors.response.eject(responseInterceptor);
     };
-  }, [dispatch]);
+  }, [dispatch, token]); 
 
   return <>{ children }</>;
 };
