@@ -1,24 +1,12 @@
 import { axiosInstance } from '../utils/axios';
 import type { ApiResponse } from '../types/ApiResponse';
-import type { ImageResDTO, UploadImageData } from '../types/user';
-
-export interface CloudinarySignature {
-  signature: string;
-  timestamp: number;
-  cloudName: string;
-  apiKey: string;
-}
-
-export interface GetImagesParams {
-  page: number;
-  limit: number;
-}
-
-export interface GetImagesResponse {
-  images: ImageResDTO[];
-  hasMore: boolean;
-  total: number;
-}
+import type {
+  CloudinarySignature,
+  GetImagesParams,
+  GetImagesResponse,
+  ImageResDTO,
+  UploadImageData,
+} from '../types/user';
 
 export const getCloudinarySignatureApi = async () => {
   const res =

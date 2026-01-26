@@ -25,7 +25,6 @@ import {
 } from '../api/upload';
 import type { ImageResDTO } from '../types/user';
 
-
 interface SortableImageCardProps {
   image: ImageResDTO;
   onEdit: (image: ImageResDTO) => void;
@@ -131,11 +130,11 @@ export const Dashboard = () => {
 
       setLoading(true);
       try {
-        const data = await getImagesApi({ page: pageNum, limit: 12 });
+        const data = await getImagesApi({ page: pageNum });
         setImages(prev =>
           pageNum === 1 ? data.images : [...prev, ...data.images],
         );
-        setHasMore(data.hasMore);
+        setHasMore(data.images.length !== 0);
       } catch (error) {
         console.error('Failed to fetch images:', error);
         toast.error('Failed to load images');
@@ -158,6 +157,7 @@ export const Dashboard = () => {
 
     observerRef.current = new IntersectionObserver(
       entries => {
+        console.log(entries);
         if (entries[0].isIntersecting) {
           setPage(prev => prev + 1);
         }

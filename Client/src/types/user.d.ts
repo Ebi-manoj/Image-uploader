@@ -18,3 +18,21 @@ export interface ImageResDTO {
   createdAt: Date;
   updatedAt: Date;
 }
+
+export interface CloudinarySignature {
+  signature: string;
+  timestamp: number;
+  cloudName: string;
+  apiKey: string;
+}
+
+export interface GetImagesParams {
+  page: number;
+  limit?: number;
+}
+
+export interface GetImagesResponse {
+  images: ImageResDTO[];
+  totalPages: boolean;
+  totalCount: number;
+}
