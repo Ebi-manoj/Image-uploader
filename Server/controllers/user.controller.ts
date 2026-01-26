@@ -17,6 +17,20 @@ export class UserController {
       data: dto,
     });
   }
+  async updateImageOrder(req: Request, res: Response) {
+    const userId = req.user?.id;
+    if (!userId)
+      throw new CustomError(HttpStatus.UNAUTHORIZED, ErrorMessage.UNAUTHORIZED);
+
+    const dto = await userService.updateImageOrder(
+      req.body.imageOrders,
+      userId,
+    );
+    res.status(HttpStatus.OK).json({
+      success: true,
+      data: dto,
+    });
+  }
 }
 
 export const userController = new UserController();

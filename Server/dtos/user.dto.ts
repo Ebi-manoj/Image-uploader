@@ -5,3 +5,8 @@ export interface GetImageResDTO {
   totalCount: number;
   images: ImageResDTO[];
 }
+
+export interface UpdateImageOrderDTO {
+  id: string;
+  order: number;
+}

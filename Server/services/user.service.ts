@@ -1,6 +1,6 @@
 import { PAGE_LIMIT } from '../constants/constant.js';
 import type { ImageResDTO } from '../dtos/upload.dto.js';
-import type { GetImageResDTO } from '../dtos/user.dto.js';
+import type { GetImageResDTO, UpdateImageOrderDTO } from '../dtos/user.dto.js';
 import { ImageModel, type ImageDocument } from '../models/Image.model.js';
 
 export class UserService {
@@ -19,6 +19,25 @@ export class UserService {
       totalCount,
       totalPages,
     };
+  }
+
+  async updateImageOrder(
+    data: UpdateImageOrderDTO[],
+    userId: string,
+  ): Promise<UpdateImageOrderDTO[]> {
+    const updatedImages = await Promise.all(
+      data.map(async img => {
+        return await ImageModel.findOneAndUpdate(
+          { userId, _id: img.id },
+          {
+            order: img.order,
+          },
+        );
+      }),
+    );
+    return updatedImages
+      .filter(img => img !== null)
+      .map(img => ({ id: img.id, order: img.order }));
   }
 
   private imageDTOMapper(images: ImageDocument): ImageResDTO {
