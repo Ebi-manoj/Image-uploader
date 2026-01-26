@@ -4,17 +4,13 @@ import { verifyResetToken } from '../middlewares/verifyResetToken.js';
 
 const router = express.Router();
 
-router.post('/auth/login', authController.loginUser);
-router.post('/auth/register', authController.registerUser);
-router.post('/auth/verify-otp', authController.verifyOtp);
-router.post('/auth/resend-otp', authController.resendOtp);
-router.post('/auth/forgot-password', authController.forgotPassword);
-router.post(
-  '/auth/reset-password',
-  verifyResetToken,
-  authController.resetPassword,
-);
-router.get('/auth/refresh-token', authController.refreshToken);
-router.post('/auth/logout', authController.logout);
+router.post('/login', authController.loginUser);
+router.post('register', authController.registerUser);
+router.post('/verify-otp', authController.verifyOtp);
+router.post('/resend-otp', authController.resendOtp);
+router.post('/forgot-password', authController.forgotPassword);
+router.post('/reset-password', verifyResetToken, authController.resetPassword);
+router.get('/refresh-token', authController.refreshToken);
+router.post('/logout', authController.logout);
 
 export default router;

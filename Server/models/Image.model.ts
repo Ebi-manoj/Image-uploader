@@ -1,5 +1,4 @@
-import mongoose, { Schema } from 'mongoose';
-
+import mongoose, { Schema, type InferSchemaType } from 'mongoose';
 
 const imageSchema = new Schema(
   {
@@ -34,5 +33,9 @@ const imageSchema = new Schema(
 );
 
 imageSchema.index({ userId: 1, order: 1 });
+
+export type ImageDocument = mongoose.HydratedDocument<
+  InferSchemaType<typeof imageSchema>
+>;
 
 export const ImageModel = mongoose.model('Image', imageSchema);
