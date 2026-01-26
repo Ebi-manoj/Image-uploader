@@ -3,7 +3,7 @@ import { HttpStatus } from './constants/HttpStatus.js';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import cookieparser from 'cookie-parser';
-import { errorHandling } from './middleware/ErrorHandling.js';
+import { errorHandling } from './middlewares/ErrorHandling.js';
 import authRoutes from './routes/auth.routes.js';
 import uploadRoutes from './routes/upload.routes.js';
 import { connectMongo } from './config/connectDB.js';

@@ -1,6 +1,10 @@
 import { useState, useRef } from 'react';
 import { Upload as UploadIcon, X, ImagePlus } from 'lucide-react';
 import { toast } from 'sonner';
+import {
+  getCloudinarySignatureApi,
+  saveImagesApi,
+} from '../api/upload';
 
 interface ImageWithTitle {
   id: string;
@@ -58,11 +62,51 @@ export default function Upload() {
     setIsUploading(true);
 
     try {
+      //  Get Cloudinary signature
+      const { signature, timestamp, cloudName, apiKey } =
+        await getCloudinarySignatureApi();
+
+      // Upload each image to Cloudinary
+      const uploadPromises = images.map(async image => {
+        const formData = new FormData();
+        formData.append('file', image.file);
+        formData.append('signature', signature);
+        formData.append('timestamp', timestamp.toString());
+        formData.append('api_key', apiKey);
+        formData.append('folder', 'image-uploader');
+
+        const response = await fetch(
+          `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
+          {
+            method: 'POST',
+            body: formData,
+          },
+        );
+
+        if (!response.ok) {
+          throw new Error(`Failed to upload ${image.title}`);
+        }
+
+        const data = await response.json();
+        return {
+          title: image.title,
+          url: data.secure_url,
+          publicId: data.public_id,
+        };
+      });
+
+      const uploadedImages = await Promise.all(uploadPromises);
+
+      // Save image metadata to database
+      await saveImagesApi(uploadedImages);
+
       toast.success(`Successfully uploaded ${images.length} images!`);
 
+    
       images.forEach(img => URL.revokeObjectURL(img.preview));
       setImages([]);
     } catch (error) {
+      console.error('Upload error:', error);
       toast.error('Failed to upload images');
     } finally {
       setIsUploading(false);
