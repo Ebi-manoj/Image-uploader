@@ -5,6 +5,7 @@ import dotenv from 'dotenv';
 import cookieparser from 'cookie-parser';
 import { errorHandling } from './middleware/ErrorHandling.js';
 import authRoutes from './routes/auth.routes.js';
+import uploadRoutes from './routes/upload.routes.js';
 import { connectMongo } from './config/connectDB.js';
 
 dotenv.config();
@@ -24,6 +25,7 @@ app.use(
 );
 
 app.use('/api', authRoutes);
+app.use('/api', uploadRoutes);
 
 app.get('/health', (req, res) => {
   res.status(HttpStatus.OK).json({
