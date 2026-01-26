@@ -22,4 +22,5 @@ export const ErrorMessage = {
   OTP_NOT_FOUND: 'No OTP found.',
   USER_ALREADY_VERIFIED: 'User is already verified',
   USER_NOT_VERIFIED: 'User is not verified',
+  INVALID_TOKEN: 'Invalid or expired token',
 };

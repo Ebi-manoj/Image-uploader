@@ -1,10 +1,7 @@
 import { useState, useRef } from 'react';
 import { Upload as UploadIcon, X, ImagePlus } from 'lucide-react';
 import { toast } from 'sonner';
-import {
-  getCloudinarySignatureApi,
-  saveImagesApi,
-} from '../api/upload';
+import { getCloudinarySignatureApi, saveImagesApi } from '../api/upload';
 
 interface ImageWithTitle {
   id: string;
@@ -102,7 +99,6 @@ export default function Upload() {
 
       toast.success(`Successfully uploaded ${images.length} images!`);
 
-    
       images.forEach(img => URL.revokeObjectURL(img.preview));
       setImages([]);
     } catch (error) {
