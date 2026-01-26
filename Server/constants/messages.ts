@@ -7,6 +7,7 @@ export const SuccessMessage = {
   PASSWORD_RESET_SUCCESS:
     'Password reset successfully. Please login with your new password.',
   REFRESHTOKEN_SUCCESS: 'Refresh token successfully',
+  IMAGE_UPLOAD_SUCCESS: 'Image uploaded successfully',
 };
 
 export const ErrorMessage = {
