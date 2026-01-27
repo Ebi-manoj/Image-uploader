@@ -10,6 +10,7 @@ export const SuccessMessage = {
   IMAGE_UPLOAD_SUCCESS: 'Image uploaded successfully',
   IMAGE_UPDATED_SUCESS: 'Image updated successfully',
   IMAGE_DELETED_SUCESS: 'Image deleted successfully',
+  PASSWORD_CHANGED_SUCCESS: 'Password changed successfully',
 };
 
 export const ErrorMessage = {

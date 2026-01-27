@@ -18,6 +18,6 @@ export const authService = new AuthService(
 );
 
 export const imageService = new ImageService();
-export const userService = new UserService();
+export const userService = new UserService(passwordHasher);
 
 export { tokenGenerator };
