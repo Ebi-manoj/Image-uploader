@@ -224,7 +224,7 @@ export const EditImageModal = ({
               <button
                 type="submit"
                 disabled={isSubmitting || !!titleError}
-                className="cursor-pointer flex flex-1 items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-pink-500 via-purple-500 to-orange-400 px-4 py-2 text-sm font-semibold text-white hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
+                className="cursor-pointer flex flex-1 items-center justify-center gap-2 rounded-lg bg-linear-to-r from-pink-500 via-purple-500 to-orange-400 px-4 py-2 text-sm font-semibold text-white hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
               >
                 {isSubmitting ? (
                   <>

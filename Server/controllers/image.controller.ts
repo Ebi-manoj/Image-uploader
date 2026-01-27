@@ -10,6 +10,7 @@ import { imageService } from '../config/container.js';
 import { CustomError } from '../utils/CustomError.js';
 import { ErrorMessage, SuccessMessage } from '../constants/messages.js';
 import { editImageSchema } from '../utils/validations/editImageValidator.js';
+import { Types } from 'mongoose';
 
 export class ImageController {
   async saveImages(req: Request, res: Response) {
@@ -56,6 +57,21 @@ export class ImageController {
       success: true,
       message: SuccessMessage.IMAGE_UPDATED_SUCESS,
       data: updatedImage,
+    });
+  }
+  async deleteImage(req: Request, res: Response) {
+    const userId = req.user?.id;
+    if (!userId)
+      throw new CustomError(HttpStatus.UNAUTHORIZED, ErrorMessage.UNAUTHORIZED);
+    const { id } = req.params as { id: string };
+    if (!Types.ObjectId.isValid(id)) {
+      throw new CustomError(HttpStatus.BAD_REQUEST, ErrorMessage.INVALID_ID);
+    }
+
+    await imageService.deleteImage(id, userId);
+    return res.status(HttpStatus.OK).json({
+      success: true,
+      message: SuccessMessage.IMAGE_DELETED_SUCESS,
     });
   }
 }

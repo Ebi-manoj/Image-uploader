@@ -68,6 +68,23 @@ export class ImageService {
     return this.imageDTOMapper(image);
   }
 
+  async deleteImage(imageId: string, userId: string): Promise<void> {
+    const deletedImage = await ImageModel.findOneAndDelete({
+      userId,
+      _id: imageId,
+    }).lean();
+    if (!deletedImage) {
+      throw new CustomError(HttpStatus.NOT_FOUND, ErrorMessage.IMAGE_NOT_FOUND);
+    }
+
+    await ImageModel.updateMany(
+      { userId, order: { $gt: deletedImage.order } },
+      {
+        $inc: { order: -1 },
+      },
+    );
+  }
+
   private imageDTOMapper(images: ImageDocument): ImageResDTO {
     return {
       id: images.id,

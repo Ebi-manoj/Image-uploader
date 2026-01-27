@@ -26,4 +26,5 @@ export const ErrorMessage = {
   USER_NOT_VERIFIED: 'User is not verified',
   INVALID_TOKEN: 'Invalid or expired token',
   IMAGE_NOT_FOUND: 'Image not found',
+  INVALID_ID: 'Invalid Id',
 };
