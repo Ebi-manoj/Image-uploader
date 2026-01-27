@@ -135,9 +135,9 @@ export const EditImageModal = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-      <div className="w-full max-w-md rounded-lg bg-white shadow-xl">
+      <div className="flex max-h-[70vh] w-full max-w-md flex-col rounded-lg bg-white shadow-xl">
         {/* Header */}
-        <div className="flex items-center justify-between border-b p-4">
+        <div className="flex shrink-0 items-center justify-between border-b p-4">
           <h2 className="text-lg font-semibold text-slate-800">Edit Image</h2>
           <button
             onClick={handleClose}
@@ -147,94 +147,98 @@ export const EditImageModal = ({
           </button>
         </div>
 
-        {/* Form */}
-        <form onSubmit={handleSubmit} className="p-4">
-          {/* Image Preview */}
-          <div className="mb-4">
-            <label className="mb-2 block text-sm font-medium text-slate-700">
-              Image Preview
-            </label>
-            <div className="relative aspect-square overflow-hidden rounded-lg bg-slate-100">
-              <img
-                src={previewUrl}
-                alt={title || 'Preview'}
-                className="h-full w-full object-cover"
+        {/* Form - Scrollable */}
+        <form onSubmit={handleSubmit} className="flex min-h-0 flex-1 flex-col">
+          <div className="overflow-y-auto p-4">
+            {/* Title Input */}
+            <div className="mb-4">
+              <label
+                htmlFor="title-input"
+                className="mb-2 block text-sm font-medium text-slate-700"
+              >
+                Title
+              </label>
+              <input
+                id="title-input"
+                type="text"
+                value={title}
+                onChange={e => handleTitleChange(e.target.value)}
+                placeholder="Enter image title (letters only, min 3 chars)..."
+                className={`w-full rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-2 ${
+                  titleError
+                    ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
+                    : 'border-slate-300 focus:border-pink-500 focus:ring-pink-500'
+                }`}
               />
+              {titleError && (
+                <p className="mt-1 text-xs text-red-600">{titleError}</p>
+              )}
+            </div>
+
+            {/* File Input */}
+            <div className="mb-4">
+              <label
+                htmlFor="file-input"
+                className="mb-2 block text-sm font-medium text-slate-700"
+              >
+                Change Image (Optional)
+              </label>
+              <input
+                id="file-input"
+                type="file"
+                accept=".jpg,.jpeg,.png,.gif,.webp,.svg"
+                onChange={handleFileSelect}
+                className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm focus:border-pink-500 focus:outline-none focus:ring-2 focus:ring-pink-500"
+              />
+              <p className="mt-1 text-xs text-slate-500">
+                JPG, PNG, GIF, WEBP, SVG (max 10MB)
+              </p>
+            </div>
+
+            {/* Image Preview */}
+            <div className="mb-4">
+              <label className="mb-2 block text-sm font-medium text-slate-700">
+                Image Preview
+              </label>
+              <div className="relative max-h-48 overflow-hidden rounded-lg bg-slate-100">
+                <img
+                  src={previewUrl}
+                  alt={title || 'Preview'}
+                  className="h-full w-full object-cover"
+                />
+              </div>
             </div>
           </div>
 
-          {/* File Input */}
-          <div className="mb-4">
-            <label
-              htmlFor="file-input"
-              className="mb-2 block text-sm font-medium text-slate-700"
-            >
-              Change Image (Optional)
-            </label>
-            <input
-              id="file-input"
-              type="file"
-              accept=".jpg,.jpeg,.png,.gif,.webp,.svg"
-              onChange={handleFileSelect}
-              className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm focus:border-pink-500 focus:outline-none focus:ring-2 focus:ring-pink-500"
-            />
-            <p className="mt-1 text-xs text-slate-500">
-              JPG, PNG, GIF, WEBP, SVG (max 10MB)
-            </p>
-          </div>
-
-          {/* Title Input */}
-          <div className="mb-6">
-            <label
-              htmlFor="title-input"
-              className="mb-2 block text-sm font-medium text-slate-700"
-            >
-              Title
-            </label>
-            <input
-              id="title-input"
-              type="text"
-              value={title}
-              onChange={e => handleTitleChange(e.target.value)}
-              placeholder="Enter image title (letters only, min 3 chars)..."
-              className={`w-full rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-2 ${
-                titleError
-                  ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
-                  : 'border-slate-300 focus:border-pink-500 focus:ring-pink-500'
-              }`}
-            />
-            {titleError && (
-              <p className="mt-1 text-xs text-red-600">{titleError}</p>
-            )}
-          </div>
-
-          {/* Actions */}
-          <div className="flex gap-3">
-            <button
-              type="button"
-              onClick={handleClose}
-              disabled={isSubmitting}
-              className="cursor-pointer flex-1 rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              disabled={isSubmitting || !!titleError}
-              className="cusror-pointer flex flex-1 items-center justify-center gap-2 rounded-lg bg-linear-to-r from-pink-500 via-purple-500 to-orange-400 px-4 py-2 text-sm font-semibold text-white hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
-            >
-              {isSubmitting ? (
-                <>
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                  Updating...
-                </>
-              ) : (
-                <>
-                  <Upload className="h-4 w-4" />
-                  Update
-                </>
-              )}
-            </button>
+          {/* Actions - Fixed at bottom */}
+          <div className="shrink-0 border-t p-4">
+            <div className="flex gap-3">
+              <button
+                type="button"
+                onClick={handleClose}
+                disabled={isSubmitting}
+                className="cursor-pointer flex-1 rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                disabled={isSubmitting || !!titleError}
+                className="cursor-pointer flex flex-1 items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-pink-500 via-purple-500 to-orange-400 px-4 py-2 text-sm font-semibold text-white hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                {isSubmitting ? (
+                  <>
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    Updating...
+                  </>
+                ) : (
+                  <>
+                    <Upload className="h-4 w-4" />
+                    Update
+                  </>
+                )}
+              </button>
+            </div>
           </div>
         </form>
       </div>
