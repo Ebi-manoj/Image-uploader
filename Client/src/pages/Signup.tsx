@@ -9,6 +9,7 @@ import {
 } from '../validations/signupValidation';
 import { signupApi } from '../api/auth';
 import { setOTPDetails } from '../utils/otp';
+import { handleApiError } from '../utils/handleApiError';
 
 export default function Signup() {
   const {
@@ -25,7 +26,9 @@ export default function Signup() {
       const res = await signupApi(data);
       setOTPDetails({ ...res, purpose: 'REGISTRATION' });
       navigate('/verify-otp', { replace: true });
-    } catch (error) {}
+    } catch (error) {
+      handleApiError(error);
+    }
   };
 
   return (
