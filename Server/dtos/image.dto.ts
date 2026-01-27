@@ -6,7 +6,14 @@ export interface UploadImageDTO {
 
 export interface SaveImagesReqDTO {
   images: UploadImageDTO[];
-  userId:string
+  userId: string;
+}
+
+export interface EditImageReqDTO {
+   id: string;
+    title: string;
+    url?: string | undefined;
+    public_id?: string | undefined;
 }
 
 export interface ImageResDTO {

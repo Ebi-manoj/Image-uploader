@@ -6,5 +6,6 @@ const router = express.Router();
 
 router.post('/', authMiddleware, imageController.saveImages);
 router.patch('/', authMiddleware, imageController.updateImageOrder);
+router.put('/:id', authMiddleware, imageController.editImage);
 
 export default router;

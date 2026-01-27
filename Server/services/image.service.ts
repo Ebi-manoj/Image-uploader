@@ -1,6 +1,13 @@
-import type { ImageResDTO, SaveImagesReqDTO } from '../dtos/image.dto.js';
+import { HttpStatus } from '../constants/HttpStatus.js';
+import { ErrorMessage } from '../constants/messages.js';
+import type {
+  EditImageReqDTO,
+  ImageResDTO,
+  SaveImagesReqDTO,
+} from '../dtos/image.dto.js';
 import type { UpdateImageOrderDTO } from '../dtos/user.dto.js';
-import { ImageModel } from '../models/Image.model.js';
+import { ImageModel, type ImageDocument } from '../models/Image.model.js';
+import { CustomError } from '../utils/CustomError.js';
 
 export class ImageService {
   async uploadImage(data: SaveImagesReqDTO): Promise<ImageResDTO[]> {
@@ -47,5 +54,29 @@ export class ImageService {
     return updatedImages
       .filter(img => img !== null)
       .map(img => ({ id: img.id, order: img.order }));
+  }
+
+  async editImage(data: EditImageReqDTO, userId: string): Promise<ImageResDTO> {
+    const image = await ImageModel.findOne({ _id: data.id, userId });
+    if (!image)
+      throw new CustomError(HttpStatus.NOT_FOUND, ErrorMessage.IMAGE_NOT_FOUND);
+    image.title = data.title ?? image.title;
+    image.url = data.url ?? image.url;
+    image.publicId = data.public_id ?? image.publicId;
+
+    await image.save();
+    return this.imageDTOMapper(image);
+  }
+
+  private imageDTOMapper(images: ImageDocument): ImageResDTO {
+    return {
+      id: images.id,
+      url: images.url,
+      publicId: images.publicId,
+      createdAt: images.createdAt,
+      updatedAt: images.updatedAt,
+      order: images.order,
+      title: images.title,
+    };
   }
 }

@@ -42,7 +42,15 @@ export const updateImageOrderApi = async (
 
 export const deleteImageApi = async (id: string) => {
   const res = await axiosInstance.delete<ApiResponse<null>>(
-    `/upload/images/${id}`,
+    `/image/${id}`,
   );
   return res.data;
+};
+
+export const editImageApi = async (id: string, data: { title: string; url?: string; public_id?: string }) => {
+  const res = await axiosInstance.put<ApiResponse<ImageResDTO>>(
+    `/image/${id}`,
+    data,
+  );
+  return res.data.data;
 };

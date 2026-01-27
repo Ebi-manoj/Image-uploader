@@ -24,6 +24,7 @@ import {
   deleteImageApi,
 } from '../api/upload';
 import type { ImageResDTO } from '../types/user';
+import { EditImageModal } from '../components/EditImageModal';
 
 interface SortableImageCardProps {
   image: ImageResDTO;
@@ -109,6 +110,7 @@ export const Dashboard = () => {
   const [hasMore, setHasMore] = useState(true);
   const [loading, setLoading] = useState(false);
   const [initialLoading, setInitialLoading] = useState(true);
+  const [editingImage, setEditingImage] = useState<ImageResDTO | null>(null);
   const observerRef = useRef<IntersectionObserver | null>(null);
   const loadMoreRef = useRef<HTMLDivElement>(null);
 
@@ -213,8 +215,14 @@ export const Dashboard = () => {
 
   // Handle edit
   const handleEdit = (image: ImageResDTO) => {
-    // TODO: Implement edit modal
-    toast.info(`Edit functionality for "${image.title}" - Coming soon!`);
+    setEditingImage(image);
+  };
+
+  // Handle edit success
+  const handleEditSuccess = (updatedImage: ImageResDTO) => {
+    setImages(prev =>
+      prev.map(img => (img.id === updatedImage.id ? updatedImage : img)),
+    );
   };
 
   // Handle delete
@@ -297,6 +305,16 @@ export const Dashboard = () => {
           </div>
         )}
       </div>
+
+      {/* Edit Modal */}
+      {editingImage && (
+        <EditImageModal
+          image={editingImage}
+          isOpen={!!editingImage}
+          onClose={() => setEditingImage(null)}
+          onSuccess={handleEditSuccess}
+        />
+      )}
     </div>
   );
 };
