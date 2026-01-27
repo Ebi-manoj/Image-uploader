@@ -8,7 +8,7 @@ import type {
 } from '../dtos/auth.dto.js';
 import type { IPasswordHasher } from '../interfaces/IPasswordHasher.js';
 import type { IOtpService } from '../interfaces/IOtpService.js';
-import { UserModel } from '../model/User.model.js';
+import { UserModel } from '../models/User.model.js';
 import { OtpPurpose, OTP_EXPIRY_MINUTES } from '../constants/otp.js';
 import { CustomError } from '../utils/CustomError.js';
 import { ErrorMessage } from '../constants/messages.js';

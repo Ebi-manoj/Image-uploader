@@ -1,4 +1,6 @@
 import { AuthService } from '../services/auth.service.js';
+import { ImageService } from '../services/image.service.js';
+import { UserService } from '../services/user.service.js';
 import { BcryptPasswordHasher } from '../utils/BcryptPasswordHasher.js';
 import { NodeMailer } from '../utils/NodeMailer.js';
 import { OtpService } from '../utils/OtpService.js';
@@ -14,5 +16,8 @@ export const authService = new AuthService(
   otpService,
   tokenGenerator,
 );
+
+export const imageService = new ImageService();
+export const userService = new UserService();
 
 export { tokenGenerator };

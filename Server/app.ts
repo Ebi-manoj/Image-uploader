@@ -3,8 +3,10 @@ import { HttpStatus } from './constants/HttpStatus.js';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import cookieparser from 'cookie-parser';
-import { errorHandling } from './middleware/ErrorHandling.js';
+import { errorHandling } from './middlewares/ErrorHandling.js';
 import authRoutes from './routes/auth.routes.js';
+import imageRoutes from './routes/image.routes.js';
+import userRoutes from './routes/user.routes.js';
 import { connectMongo } from './config/connectDB.js';
 
 dotenv.config();
@@ -23,7 +25,9 @@ app.use(
   }),
 );
 
-app.use('/api', authRoutes);
+app.use('/api/auth', authRoutes);
+app.use('/api/image', imageRoutes);
+app.use('/api/user', userRoutes);
 
 app.get('/health', (req, res) => {
   res.status(HttpStatus.OK).json({

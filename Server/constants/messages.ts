@@ -7,6 +7,9 @@ export const SuccessMessage = {
   PASSWORD_RESET_SUCCESS:
     'Password reset successfully. Please login with your new password.',
   REFRESHTOKEN_SUCCESS: 'Refresh token successfully',
+  IMAGE_UPLOAD_SUCCESS: 'Image uploaded successfully',
+  IMAGE_UPDATED_SUCESS: 'Image updated successfully',
+  IMAGE_DELETED_SUCESS: 'Image deleted successfully',
 };
 
 export const ErrorMessage = {
@@ -21,4 +24,7 @@ export const ErrorMessage = {
   OTP_NOT_FOUND: 'No OTP found.',
   USER_ALREADY_VERIFIED: 'User is already verified',
   USER_NOT_VERIFIED: 'User is not verified',
+  INVALID_TOKEN: 'Invalid or expired token',
+  IMAGE_NOT_FOUND: 'Image not found',
+  INVALID_ID: 'Invalid Id',
 };

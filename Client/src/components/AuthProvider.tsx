@@ -14,6 +14,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   useEffect(() => {
     if (token && user) {
+      setLoading(false);
       return;
     }
     const checkAuth = async () => {
@@ -21,7 +22,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         const res = await refreshTokenApi();
         dispatch(setUser(res));
       } catch (error) {
-       
       } finally {
         setLoading(false);
       }

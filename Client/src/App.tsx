@@ -6,6 +6,7 @@ import VerifyOTP from './pages/VerifyOTP';
 import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
 import { Dashboard } from './pages/Dashboard';
+import Upload from './pages/Upload';
 import { IsAuthenticated } from './components/IsAuthenticated';
 import { IsProtected } from './components/IsProtected';
 
@@ -22,6 +23,7 @@ function App() {
         </Route>
         <Route element={<IsProtected />}>
           <Route path="" element={<Dashboard />} />
+          <Route path="/upload" element={<Upload />} />
         </Route>
       </Route>
     </Routes>
