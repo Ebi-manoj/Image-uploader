@@ -1,11 +1,22 @@
 import { cloudinary } from '../config/cloudinary.js';
 import { PAGE_LIMIT } from '../constants/constant.js';
+import { HttpStatus } from '../constants/HttpStatus.js';
+import { ErrorMessage } from '../constants/messages.js';
 import type { ImageResDTO } from '../dtos/image.dto.js';
-import type { GetImageResDTO, GetSignatureDTO } from '../dtos/user.dto.js';
+import type {
+  ChangePasswordDTO,
+  GetImageResDTO,
+  GetSignatureDTO,
+} from '../dtos/user.dto.js';
+import type { IPasswordHasher } from '../interfaces/IPasswordHasher.js';
 import { ImageModel, type ImageDocument } from '../models/Image.model.js';
+import { UserModel } from '../models/User.model.js';
+import { CustomError } from '../utils/CustomError.js';
 import { Env } from '../utils/Env.js';
 
 export class UserService {
+  constructor(private readonly passwordHasher: IPasswordHasher) {}
+
   async getSignature(): Promise<GetSignatureDTO> {
     const timestamp = Math.round(new Date().getTime() / 1000);
 
@@ -39,6 +50,27 @@ export class UserService {
       totalCount,
       totalPages,
     };
+  }
+
+  async changePassword(data: ChangePasswordDTO, userId: string) {
+    const user = await UserModel.findById(userId);
+    if (!user)
+      throw new CustomError(HttpStatus.NOT_FOUND, ErrorMessage.USER_NOT_FOUND);
+
+    const isMatch = await this.passwordHasher.compare(
+      data.oldPassword,
+      user.password,
+    );
+    if (!isMatch)
+      throw new CustomError(
+        HttpStatus.BAD_REQUEST,
+        ErrorMessage.INVALID_CRENDTIALS,
+      );
+
+    const hashedPassword = await this.passwordHasher.hash(data.newPassword);
+    await UserModel.findByIdAndUpdate(userId, {
+      password: hashedPassword,
+    });
   }
 
   private imageDTOMapper(images: ImageDocument): ImageResDTO {

@@ -29,7 +29,7 @@ export default function ProfileMenu() {
   };
 
   const handleResetPassword = () => {
-    navigate('/forgot-password');
+    navigate('/change-password');
   };
 
   return (

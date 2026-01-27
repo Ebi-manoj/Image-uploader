@@ -17,3 +17,8 @@ export interface UpdateImageOrderDTO {
   id: string;
   order: number;
 }
+
+export interface ChangePasswordDTO {
+  oldPassword: string;
+  newPassword: string;
+}
