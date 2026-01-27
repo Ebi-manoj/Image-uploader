@@ -5,6 +5,6 @@ import { userController } from '../controllers/user.controller.js';
 const router = express.Router();
 
 router.get('/image', authMiddleware, userController.getImages);
-router.patch('/image/order', authMiddleware, userController.updateImageOrder);
+router.get('/signature', authMiddleware, userController.getSignature);
 
 export default router;

@@ -11,18 +11,15 @@ import type {
 export const getCloudinarySignatureApi = async () => {
   const res =
     await axiosInstance.get<ApiResponse<CloudinarySignature>>(
-      '/upload/signature',
+      '/user/signature',
     );
   return res.data.data;
 };
 
 export const saveImagesApi = async (images: UploadImageData[]) => {
-  const res = await axiosInstance.post<ApiResponse<ImageResDTO[]>>(
-    '/upload/images',
-    {
-      images,
-    },
-  );
+  const res = await axiosInstance.post<ApiResponse<ImageResDTO[]>>('/image', {
+    images,
+  });
   return res.data.data;
 };
 
@@ -37,10 +34,9 @@ export const getImagesApi = async (params: GetImagesParams) => {
 export const updateImageOrderApi = async (
   imageOrders: { id: string; order: number }[],
 ) => {
-  const res = await axiosInstance.patch<ApiResponse<ImageResDTO[]>>(
-    '/user/image/order',
-    { imageOrders },
-  );
+  const res = await axiosInstance.patch<ApiResponse<ImageResDTO[]>>('/image', {
+    imageOrders,
+  });
   return res.data.data;
 };
 

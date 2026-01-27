@@ -1,9 +1,29 @@
+import { cloudinary } from '../config/cloudinary.js';
 import { PAGE_LIMIT } from '../constants/constant.js';
-import type { ImageResDTO } from '../dtos/upload.dto.js';
-import type { GetImageResDTO, UpdateImageOrderDTO } from '../dtos/user.dto.js';
+import type { ImageResDTO } from '../dtos/image.dto.js';
+import type { GetImageResDTO, GetSignatureDTO } from '../dtos/user.dto.js';
 import { ImageModel, type ImageDocument } from '../models/Image.model.js';
+import { Env } from '../utils/Env.js';
 
 export class UserService {
+  async getSignature(): Promise<GetSignatureDTO> {
+    const timestamp = Math.round(new Date().getTime() / 1000);
+
+    const signature = cloudinary.utils.api_sign_request(
+      {
+        timestamp: timestamp,
+        folder: 'image-uploader',
+      },
+      Env.CLOUDINARY_SECRET,
+    );
+    return {
+      signature,
+      timestamp,
+      cloudName: Env.CLOUDINARY_NAME,
+      apiKey: Env.CLOUDINARY_KEY,
+    };
+  }
+
   async getImages(userId: string, page: number): Promise<GetImageResDTO> {
     const skip = (page - 1) * PAGE_LIMIT;
 
@@ -19,25 +39,6 @@ export class UserService {
       totalCount,
       totalPages,
     };
-  }
-
-  async updateImageOrder(
-    data: UpdateImageOrderDTO[],
-    userId: string,
-  ): Promise<UpdateImageOrderDTO[]> {
-    const updatedImages = await Promise.all(
-      data.map(async img => {
-        return await ImageModel.findOneAndUpdate(
-          { userId, _id: img.id },
-          {
-            order: img.order,
-          },
-        );
-      }),
-    );
-    return updatedImages
-      .filter(img => img !== null)
-      .map(img => ({ id: img.id, order: img.order }));
   }
 
   private imageDTOMapper(images: ImageDocument): ImageResDTO {

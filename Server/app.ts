@@ -5,7 +5,7 @@ import dotenv from 'dotenv';
 import cookieparser from 'cookie-parser';
 import { errorHandling } from './middlewares/ErrorHandling.js';
 import authRoutes from './routes/auth.routes.js';
-import uploadRoutes from './routes/upload.routes.js';
+import imageRoutes from './routes/image.routes.js';
 import userRoutes from './routes/user.routes.js';
 import { connectMongo } from './config/connectDB.js';
 
@@ -26,7 +26,7 @@ app.use(
 );
 
 app.use('/api/auth', authRoutes);
-app.use('/api/upload', uploadRoutes);
+app.use('/api/image', imageRoutes);
 app.use('/api/user', userRoutes);
 
 app.get('/health', (req, res) => {

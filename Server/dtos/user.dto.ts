@@ -1,4 +1,11 @@
-import type { ImageResDTO } from './upload.dto.js';
+import type { ImageResDTO } from './image.dto.js';
+
+export interface GetSignatureDTO {
+  signature: string;
+  timestamp: number;
+  cloudName: string;
+  apiKey: string;
+}
 
 export interface GetImageResDTO {
   totalPages: number;
