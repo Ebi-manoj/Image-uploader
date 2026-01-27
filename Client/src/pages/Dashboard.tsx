@@ -25,6 +25,7 @@ import {
 } from '../api/upload';
 import type { ImageResDTO } from '../types/user';
 import { EditImageModal } from '../components/EditImageModal';
+import { ConfirmModal } from '../components/ConfirmModal';
 
 interface SortableImageCardProps {
   image: ImageResDTO;
@@ -85,7 +86,7 @@ const SortableImageCard = ({
               e.stopPropagation();
               onEdit(image);
             }}
-            className="flex h-10 w-10 items-center justify-center rounded-full bg-white text-slate-700 transition hover:bg-slate-100"
+            className="cursor-pointer flex h-10 w-10 items-center justify-center rounded-full bg-white text-slate-700 transition hover:bg-slate-100"
           >
             <Pencil className="h-4 w-4" />
           </button>
@@ -94,7 +95,7 @@ const SortableImageCard = ({
               e.stopPropagation();
               onDelete(image.id);
             }}
-            className="flex h-10 w-10 items-center justify-center rounded-full bg-red-500 text-white transition hover:bg-red-600"
+            className="cursor-pointer flex h-10 w-10 items-center justify-center rounded-full bg-red-500 text-white transition hover:bg-red-600"
           >
             <Trash2 className="h-4 w-4" />
           </button>
@@ -111,6 +112,7 @@ export const Dashboard = () => {
   const [loading, setLoading] = useState(false);
   const [initialLoading, setInitialLoading] = useState(true);
   const [editingImage, setEditingImage] = useState<ImageResDTO | null>(null);
+  const [deleteImageId, setDeleteImageId] = useState<string | null>(null);
   const observerRef = useRef<IntersectionObserver | null>(null);
   const loadMoreRef = useRef<HTMLDivElement>(null);
 
@@ -226,16 +228,23 @@ export const Dashboard = () => {
   };
 
   // Handle delete
-  const handleDelete = async (id: string) => {
-    if (!confirm('Are you sure you want to delete this image?')) return;
+  const handleDelete = (id: string) => {
+    setDeleteImageId(id);
+  };
+
+  // Confirm delete
+  const confirmDelete = async () => {
+    if (!deleteImageId) return;
 
     try {
-      await deleteImageApi(id);
-      setImages(prev => prev.filter(img => img.id !== id));
+      await deleteImageApi(deleteImageId);
+      setImages(prev => prev.filter(img => img.id !== deleteImageId));
       toast.success('Image deleted successfully');
     } catch (error) {
       console.error('Failed to delete image:', error);
       toast.error('Failed to delete image');
+    } finally {
+      setDeleteImageId(null);
     }
   };
 
@@ -315,6 +324,18 @@ export const Dashboard = () => {
           onSuccess={handleEditSuccess}
         />
       )}
+
+      {/* Delete Confirmation Modal */}
+      <ConfirmModal
+        isOpen={!!deleteImageId}
+        title="Delete Image"
+        message="Are you sure you want to delete this image? This action cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        variant="danger"
+        onConfirm={confirmDelete}
+        onCancel={() => setDeleteImageId(null)}
+      />
     </div>
   );
 };
