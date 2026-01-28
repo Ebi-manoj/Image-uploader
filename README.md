@@ -9,7 +9,7 @@ A full-stack image uploader and management application built with **Node.js, Exp
 ## 🚀 Live Demo
 
 Access the live application here:  
-**[Image Uploader Live](https://.app)**
+**[Image Uploader Live](https://image-uploader-in.vercel.app)**
 
 - **Note:**  
   The backend is deployed on Render (Free Tier). Due to Render’s inactivity policy, the server may enter a sleep state after inactivity. Please allow **1–2 minutes** for the server to start.
@@ -67,7 +67,7 @@ Access the live application here:
 ### 2. Clone the Repository
 
 ```bash
-git clone https://github.com/your-username/image-uploader.git
+git clone https://github.com/Ebi-manoj/Image-uploader.git
 cd image-uploader
 ```
 
